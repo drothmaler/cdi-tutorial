@@ -32,8 +32,6 @@ public class CreateUserView extends CustomComponent implements View {
     @Override
     public void enter(ViewChangeEvent event) {
         final VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
         layout.addComponent(new Label("Create new user"));
 
         final BeanFieldGroup<User> fieldGroup = new BeanFieldGroup<User>(
@@ -44,20 +42,15 @@ public class CreateUserView extends CustomComponent implements View {
         layout.addComponent(fieldGroup.buildAndBind("password"));
         layout.addComponent(fieldGroup.buildAndBind("email"));
 
-        fieldGroup.getField("username").addValidator(new Validator() {
-
-            @Override
-            public void validate(Object value) throws InvalidValueException {
-                String username = (String) value;
-                if (username.isEmpty()) {
-                    throw new InvalidValueException("Username cannot be empty");
-                }
-
-                if (userDAO.getUserBy(username) != null) {
-                    throw new InvalidValueException("Username is taken");
-                }
+        fieldGroup.getField("username").addValidator(value -> {
+            String username = (String) value;
+            if (username.isEmpty()) {
+                throw new Validator.InvalidValueException("Username cannot be empty");
             }
 
+            if (userDAO.getUserBy(username) != null) {
+                throw new Validator.InvalidValueException("Username is taken");
+            }
         });
 
         fieldGroup.setItemDataSource(new User(ID_FACTORY.incrementAndGet(), "",
@@ -81,16 +74,12 @@ public class CreateUserView extends CustomComponent implements View {
             }
         });
         Button commitButton = new Button("Create");
-        commitButton.addClickListener(new ClickListener() {
-
-            @Override
-            public void buttonClick(ClickEvent event) {
-                try {
-                    fieldGroup.commit();
-                    messageLabel.setValue("User created");
-                } catch (CommitException e) {
-                    messageLabel.setValue(e.getMessage());
-                }
+        commitButton.addClickListener(event1 -> {
+            try {
+                fieldGroup.commit();
+                messageLabel.setValue("User created");
+            } catch (CommitException e) {
+                messageLabel.setValue(e.getMessage());
             }
         });
 

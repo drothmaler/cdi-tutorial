@@ -43,8 +43,6 @@ public class LoginView extends CustomComponent implements View, ClickListener {
         VerticalLayout layout = new VerticalLayout();
         setCompositionRoot(layout);
         layout.setSizeFull();
-        layout.setMargin(true);
-        layout.setSpacing(true);
 
         layout.addComponent(usernameField);
         layout.addComponent(passwordField);
@@ -59,7 +57,7 @@ public class LoginView extends CustomComponent implements View, ClickListener {
 
         User loginUser = userDAO.getUserBy(username, password);
         if (loginUser == null) {
-            new Notification("Wrong password", Notification.TYPE_ERROR_MESSAGE)
+            new Notification("Wrong password", Notification.Type.ERROR_MESSAGE)
                     .show(getUI().getPage());
             return;
         }

@@ -1,5 +1,6 @@
 package com.vaadin.cdi.tutorial;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 public class Message {
@@ -43,7 +44,7 @@ public class Message {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("[");
-        sb.append(sendTime.toLocaleString());
+        sb.append(DateFormat.getDateTimeInstance().format(sendTime));
         sb.append("] ");
         sb.append(sender.getName());
         sb.append(": ");
